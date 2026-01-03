@@ -10,10 +10,12 @@
     
     <title>Evidencija Priliva i Odliva</title>
     
+    <!-- Google Sign-In Library -->
+    <script src="https://accounts.google.com/gsi/client" async defer></script>
+    
     <!-- Inline PWA Manifest -->
     <link rel="manifest" href="data:application/json;base64,eyJuYW1lIjoiRXZpZGVuY2lqYSBQcmlsaXZhIGkgT2RsaXZhIiwic2hvcnRfbmFtZSI6IkV2aWRlbmNpamEiLCJkZXNjcmlwdGlvbiI6IkFwbGlrYWNpamEgemEgcHJhxIdlbmplIHByaWxpdmEgaSBvZGxpdmEgbm92Y2EiLCJzdGFydF91cmwiOiIvIiwiZGlzcGxheSI6InN0YW5kYWxvbmUiLCJiYWNrZ3JvdW5kX2NvbG9yIjoiIzY2N2VlYSIsInRoZW1lX2NvbG9yIjoiIzY2N2VlYSIsIm9yaWVudGF0aW9uIjoicG9ydHJhaXQiLCJpY29ucyI6W3sic3JjIjoiZGF0YTppbWFnZS9zdmcreG1sLCUzQ3N2ZyB4bWxucz0naHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmcnIHZpZXdCb3g9JzAgMCA1MTIgNTEyJyUzRSUzQ2RlZnMlM0UlM0NsaW5lYXJHcmFkaWVudCBpZD0nZ3JhZCcgeDElM0QnMCUyNScgeTE9JzAlMjUnIHgyPScxMDAlMjUnIHkyPScxMDAlMjUnJTNFJTNDc3RvcCBvZmZzZXQ9JzAlMjUnIHN0eWxlPSdzdG9wLWNvbG9yOiUyMzY2N2VlYTtzdG9wLW9wYWNpdHk6MScgLyUzRSUzQ3N0b3Agb2Zmc2V0PScxMDAlMjUnIHN0eWxlPSdzdG9wLWNvbG9yOiUyMzc2NGJhMjtzdG9wLW9wYWNpdHk6MScgLyUzRSUzQy9saW5lYXJHcmFkaWVudCUzRSUzQy9kZWZzJTNFJTNDcmVjdCB3aWR0aD0nNTEyJyBoZWlnaHQ9JzUxMicgZmlsbD0ndXJsKCUyM2dyYWQpJyByeD0nMTAwJy8lM0UlM0N0ZXh0IHg9JzI1NicgeT0nMzIwJyBmb250LXNpemU9JzI4MCcgdGV4dC1hbmNob3I9J21pZGRsZScgZmlsbD0nd2hpdGUnIGZvbnQtZmFtaWx5PSdBcmlhbCxzYW5zLXNlcmlmJyBmb250LXdlaWdodD0nYm9sZCclM0UlRjAlOUYlOTIlQjAlM0MvdGV4dCUzRSUzQy9zdmclM0UiLCJzaXplcyI6IjUxMng1MTIiLCJ0eXBlIjoiaW1hZ2Uvc3ZnK3htbCIsInB1cnBvc2UiOiJhbnkgbWFza2FibGUifV19">
     
-    <!-- Apple Touch Icon -->
     <link rel="apple-touch-icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 192 192'%3E%3Cdefs%3E%3ClinearGradient id='grad' x1='0%25' y1='0%25' x2='100%25' y2='100%25'%3E%3Cstop offset='0%25' style='stop-color:%23667eea;stop-opacity:1' /%3E%3Cstop offset='100%25' style='stop-color:%23764ba2;stop-opacity:1' /%3E%3C/linearGradient%3E%3C/defs%3E%3Crect width='192' height='192' fill='url(%23grad)' rx='40'/%3E%3Ctext x='96' y='125' font-size='100' text-anchor='middle' fill='white'%3E💰%3C/text%3E%3C/svg%3E">
     
     <style>
@@ -188,14 +190,8 @@
             width: 40px;
             height: 40px;
             border-radius: 50%;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            color: white;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 18px;
-            font-weight: 600;
             flex-shrink: 0;
+            object-fit: cover;
         }
 
         .user-details {
@@ -502,6 +498,23 @@
             margin-left: 5px;
         }
 
+        #googleSignInDiv {
+            display: flex;
+            justify-content: center;
+            margin: 30px 0;
+        }
+
+        .login-info {
+            background: #e3f2fd;
+            border-left: 4px solid #2196f3;
+            padding: 15px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+            color: #1565c0;
+            font-size: 14px;
+            line-height: 1.6;
+        }
+
         @media (max-width: 480px) {
             .summary-grid {
                 grid-template-columns: 1fr;
@@ -544,28 +557,22 @@
 
         <!-- Login Screen -->
         <div id="loginScreen" class="card" style="display: none;">
-            <h1>👤 Prijava</h1>
+            <h1>🔐 Prijava sa Google Nalogom</h1>
             
-            <form id="loginForm">
-                <div class="form-group">
-                    <label>Vaše Ime i Prezime *</label>
-                    <input type="text" id="loginName" placeholder="npr. Marko Petrović" required>
-                </div>
-
-                <div class="form-group">
-                    <label>Vaš Email *</label>
-                    <input type="email" id="loginEmail" placeholder="npr. marko@firma.com" required>
-                </div>
-
-                <button type="submit" class="btn">Pristupi Aplikaciji</button>
-            </form>
+            <div class="login-info">
+                <strong>🔒 Sigurna autentifikacija</strong><br>
+                Prijavite se sa vašim Google nalogom. Samo autorizovani korisnici mogu pristupiti aplikaciji.
+            </div>
+            
+            <!-- Google Sign-In Button -->
+            <div id="googleSignInDiv"></div>
         </div>
 
         <!-- Main App -->
         <div id="appScreen" style="display: none;">
             <div class="app-header">
                 <div class="user-info">
-                    <div class="user-avatar" id="userAvatar"></div>
+                    <img id="userAvatar" class="user-avatar" src="" alt="Avatar">
                     <div class="user-details">
                         <h2 id="userName"></h2>
                         <p id="userEmail"></p>
@@ -735,7 +742,10 @@
     </div>
 
     <script>
-        // PWA Install (bez service worker-a zbog 404)
+        // ⚠️ VAŽNO: Zamijenite ovo sa vašim pravim Google Client ID-om
+        const GOOGLE_CLIENT_ID = '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.apps.googleusercontent.com';
+
+        // PWA Install
         let deferredPrompt;
         
         window.addEventListener('beforeinstallprompt', (e) => {
@@ -785,9 +795,62 @@
                 } else {
                     document.getElementById('setupScreen').style.display = 'none';
                     document.getElementById('loginScreen').style.display = 'block';
+                    initializeGoogleSignIn();
                 }
             }
         };
+
+        // Initialize Google Sign-In
+        function initializeGoogleSignIn() {
+            if (typeof google === 'undefined') {
+                setTimeout(initializeGoogleSignIn, 100);
+                return;
+            }
+
+            google.accounts.id.initialize({
+                client_id: GOOGLE_CLIENT_ID,
+                callback: handleGoogleSignIn,
+                auto_select: false
+            });
+
+            google.accounts.id.renderButton(
+                document.getElementById('googleSignInDiv'),
+                {
+                    theme: 'filled_blue',
+                    size: 'large',
+                    text: 'signin_with',
+                    shape: 'rectangular',
+                    logo_alignment: 'left',
+                    width: 280
+                }
+            );
+        }
+
+        // Handle Google Sign-In Response
+        function handleGoogleSignIn(response) {
+            const credential = response.credential;
+            const payload = parseJwt(credential);
+            
+            currentUser = {
+                name: payload.name,
+                email: payload.email,
+                avatar: payload.picture,
+                googleId: payload.sub
+            };
+
+            localStorage.setItem('currentUser', JSON.stringify(currentUser));
+            showApp();
+        }
+
+        // Parse JWT token
+        function parseJwt(token) {
+            const base64Url = token.split('.')[1];
+            const base64 = base64Url.replace(/-/g, '+').replace(/_/g, '/');
+            const jsonPayload = decodeURIComponent(atob(base64).split('').map(function(c) {
+                return '%' + ('00' + c.charCodeAt(0).toString(16)).slice(-2);
+            }).join(''));
+            return JSON.parse(jsonPayload);
+        }
 
         function saveApiUrl() {
             const url = document.getElementById('apiUrl').value.trim();
@@ -802,26 +865,15 @@
             
             document.getElementById('setupScreen').style.display = 'none';
             document.getElementById('loginScreen').style.display = 'block';
+            initializeGoogleSignIn();
         }
-
-        document.getElementById('loginForm').addEventListener('submit', function(e) {
-            e.preventDefault();
-            
-            const name = document.getElementById('loginName').value.trim();
-            const email = document.getElementById('loginEmail').value.trim();
-            
-            currentUser = { name, email };
-            localStorage.setItem('currentUser', JSON.stringify(currentUser));
-            
-            showApp();
-        });
 
         function showApp() {
             document.getElementById('loginScreen').style.display = 'none';
             document.getElementById('appScreen').style.display = 'block';
             document.getElementById('userName').textContent = currentUser.name;
             document.getElementById('userEmail').textContent = currentUser.email;
-            document.getElementById('userAvatar').textContent = currentUser.name.charAt(0).toUpperCase();
+            document.getElementById('userAvatar').src = currentUser.avatar;
             
             init();
         }
@@ -829,6 +881,8 @@
         function logout() {
             if (confirm('Da li ste sigurni?')) {
                 localStorage.removeItem('currentUser');
+                google.accounts.id.disableAutoSelect();
+                currentUser = null;
                 location.reload();
             }
         }
@@ -836,6 +890,7 @@
         function resetSetup() {
             if (confirm('Svi lokalni podaci će biti obrisani.')) {
                 localStorage.clear();
+                google.accounts.id.disableAutoSelect();
                 location.reload();
             }
         }
@@ -1135,3 +1190,4 @@
     </script>
 </body>
 </html>
+
